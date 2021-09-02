@@ -19,7 +19,6 @@ start.addEventListener("click", () => {
   data.playerHP = 100;
   data.monsterHP = 100;
   data.winner = 0;
-  updateHp();
   renderHp();
   updateChat("start");
 });
@@ -32,7 +31,6 @@ giveUp.addEventListener("click", () => {
 kick.addEventListener("click", () => {
   monsterAttack();
   playerAttack();
-  updateHp();
   renderHp();
   checkWinner();
 });
@@ -44,7 +42,6 @@ combo.addEventListener("click", () => {
     playerAttack(5, 10);
   }
   monsterAttack();
-  updateHp();
   renderHp();
   checkWinner();
 });
@@ -52,12 +49,12 @@ combo.addEventListener("click", () => {
 heal.addEventListener("click", () => {
   healFunction();
   monsterAttack();
-  updateHp();
   renderHp();
+  checkWinner();
 });
 
 function playerAttack(a = 5, b = 30) {
-  let playerAttack = getRandom(a, b);
+  const playerAttack = getRandom(a, b);
   data.monsterHP -= playerAttack;
   if (data.monsterHP <= 0) {
     data.monsterHP = 0;
@@ -66,7 +63,7 @@ function playerAttack(a = 5, b = 30) {
 }
 
 function monsterAttack() {
-  let monsterAttack = getRandom(5, 25);
+  const monsterAttack = getRandom(5, 25);
   data.playerHP -= monsterAttack;
   if (data.playerHP <= 0) {
     data.playerHP = 0;
@@ -75,19 +72,16 @@ function monsterAttack() {
 }
 
 function healFunction() {
-  let healHP = getRandom(10, 50);
+  const healHP = getRandom(10, 50);
   if (data.playerHP < 50) {
     data.playerHP += healHP;
     updateChat("heal", healHP);
   }
 }
 
-function updateHp() {
+function renderHp() {
   pHP.style.width = data.playerHP + "%";
   mHP.style.width = data.monsterHP + "%";
-}
-
-function renderHp() {
   pHP.innerHTML = (`<p>${data.playerHP}%</p>`);
   mHP.innerHTML = (`<p>${data.monsterHP}%</p>`);
   if (data.playerHP > 50) {
@@ -106,18 +100,18 @@ function renderHp() {
   }
 }
 
-function updateChat(type, el) {
+function updateChat(type, value) {
   switch (type) {
     case "start":
       return chat.insertAdjacentHTML("afterbegin", `<p>Деритесь...</p>`);
     case "player":
-      return chat.insertAdjacentHTML("afterbegin", `<p>Ты пнул монстра на ${el}</p>`);
+      return chat.insertAdjacentHTML("afterbegin", `<p>Ты пнул монстра на ${value}</p>`);
     case "monster":
-      return chat.insertAdjacentHTML("afterbegin", `<p>Получил люлей на ${el}</p>`);
+      return chat.insertAdjacentHTML("afterbegin", `<p>Получил люлей на ${value}</p>`);
     case "heal":
-      return chat.insertAdjacentHTML("afterbegin", `<p>Отхилился на ${el}</p>`);
+      return chat.insertAdjacentHTML("afterbegin", `<p>Отхилился на ${value}</p>`);
     case "giveUp":
-      return chat.insertAdjacentHTML("afterbegin", `<p>Зассал?</p>`);
+      return chat.insertAdjacentHTML("afterbegin", `<p>Не ну ты видел? Видел?</p>`);
     case "end":
       if (data.winner === 1) {
         return chat.insertAdjacentHTML("afterbegin", `<p>ТРИУМФАТОР!!!</p>`);
@@ -131,16 +125,14 @@ function updateChat(type, el) {
 }
 
 function checkWinner() {
-  if (data.playerHP === 0) {
-    data.winner = 2;
-    startParent.classList.remove("active");
-  }
-  if (data.monsterHP === 0) {
-    data.winner = 1;
-    startParent.classList.remove("active");
-  }
   if (data.monsterHP === 0 && data.playerHP === 0) {
     data.winner = 3;
+    startParent.classList.remove("active");
+  } else if (data.playerHP === 0 && data.monsterHP !== 0) {
+    data.winner = 2;
+    startParent.classList.remove("active");
+  } else if (data.monsterHP === 0 && data.playerHP !== 0) {
+    data.winner = 1;
     startParent.classList.remove("active");
   }
   updateChat("end");

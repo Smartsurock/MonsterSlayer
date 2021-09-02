@@ -85,14 +85,14 @@ h6 {
 }
 .player {
   flex: 0 1 50%;
-  background-image: url("img/player.jpg");
+  background-image: url("../img/player.jpg");
   background-size: cover;
   margin: 0px 20px;
   position: relative;
 }
 .monster {
   flex: 0 1 50%;
-  background: url("img/monster.jpg");
+  background: url("../img/monster.jpg");
   background-size: cover;
   margin: 0px 20px;
   position: relative;
@@ -184,13 +184,14 @@ h6 {
     inset 0px 0px 12px rgb(116, 116, 116);
 }
 .chat {
-  background-image: url("img/chat.jpg");
+  background-image: url("../img/chat.jpg");
   background-size: cover;
   max-width: calc(80% - 40px);
   margin: 20px auto 0;
   padding: 5px 20px;
   overflow: auto;
   height: 300px;
+  text-align: center;
 }
 .chat p {
   font-size: 18px;
