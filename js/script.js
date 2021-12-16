@@ -6,7 +6,7 @@ const pHP = document.querySelector(".player__hp");
 const mHP = document.querySelector(".monster__hp");
 const chat = document.querySelector(".chat");
 const start = document.querySelector(".start");
-const startParent = document.querySelector(".navigation__start");
+const navigationStart = document.querySelector(".navigation__start");
 
 const data = {
   playerHP: 100,
@@ -15,16 +15,16 @@ const data = {
 }
 
 start.addEventListener("click", () => {
-  startParent.classList.add("active");
-  data.playerHP = 100;
-  data.monsterHP = 100;
-  data.winner = 0;
-  renderHp();
+  if (navigationStart.parentElement.classList.contains("finish")) return;
+  navigationStart.classList.add("active");
+  defaultStart();
   updateChat("start");
+  cleanChat();
 });
 
 giveUp.addEventListener("click", () => {
-  startParent.classList.remove("active");
+  fightEnd();
+  defaultStart();
   updateChat("giveUp");
 });
 
@@ -124,18 +124,41 @@ function updateChat(type, value) {
   }
 }
 
+function cleanChat() {
+  let removeChat = chat.querySelectorAll('p');
+  removeChat.forEach(el => {
+    el.remove();
+  });
+  chat.insertAdjacentHTML("afterbegin", `<p>Выбери судьбу...</p>`);
+}
+
 function checkWinner() {
   if (data.monsterHP === 0 && data.playerHP === 0) {
     data.winner = 3;
-    startParent.classList.remove("active");
+    fightEnd();
   } else if (data.playerHP === 0 && data.monsterHP !== 0) {
     data.winner = 2;
-    startParent.classList.remove("active");
+    fightEnd();
   } else if (data.monsterHP === 0 && data.playerHP !== 0) {
     data.winner = 1;
-    startParent.classList.remove("active");
+    fightEnd();
   }
   updateChat("end");
+}
+
+function fightEnd() {
+  navigationStart.parentElement.classList.add("finish");
+  navigationStart.classList.remove("active");
+  setTimeout(() => {
+    navigationStart.parentElement.classList.remove("finish");
+  }, 2000);
+}
+
+function defaultStart() {
+  data.playerHP = 100;
+  data.monsterHP = 100;
+  data.winner = 0;
+  renderHp();
 }
 
 function getRandom(min, max) {
